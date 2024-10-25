@@ -1,0 +1,12 @@
+package com.interview.etravli.enums;
+
+public enum ExceptionMessages {
+
+    DATA_INTEGRITY_VIOLATION,
+    CLEARING_COST_NOT_FOUND,
+    USER_NOT_FOUND,
+    INVALID_JWT_SIGNATURE,
+    AUTHORIZATION_FAILED,
+    EXTERNAL_API_RATE_LIMIT_EXCEEDED,
+    EXTERNAL_API_ERROR
+}

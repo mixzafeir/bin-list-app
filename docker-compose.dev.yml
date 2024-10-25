@@ -1,0 +1,75 @@
+services:
+  app:
+    build: .
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - APP_LOGGING_FILE_LOCATION=./src/main/resources/logs/info.log
+      - APP_LOGGING_MAX_FILE_SIZE=100MB
+      - APP_LOGGING_MAX_HISTORY=30
+      - APP_LOGGING_TOTAL_SIZE_CAP=5GB
+      - APP_FEIGN_NAMES_BIN_LIST_URL=https://lookup.binlist.net
+      - APP_FEIGN_NAMES_BIN_LIST_NAME=bin-list
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE=10
+      - SPRING_REDIS_LETTUCE_POOL_MAX_IDLE=5
+      - SPRING_REDIS_LETTUCE_POOL_MIN_IDLE=1
+      - SPRING_REDIS_LETTUCE_POOL_MAX_WAIT=1000
+      - SPRING_REDIS_TIMEOUT=2000
+      - SPRING_REDIS_LETTUCE_SHUTDOWN_TIMEOUT=50
+      - SERVER_TOMCAT_THREADS_MAX=10
+      - SERVER_TOMCAT_THREADS_MIN_SPARE=5
+      - SERVER_TOMCAT_CONNECTION_TIMEOUT=5000
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/etraveli_dev
+      - SPRING_DATASOURCE_USERNAME=etraveli_user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_LIQUIBASE_CHANGE_LOG=classpath:/db/changelog/db.changelog-master.xml
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_LIQUIBASE_ENABLED=true
+      - JWT_SECRET=test
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: etraveli_dev
+      MYSQL_USER: etraveli_user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data-dev:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data-dev:

@@ -1,0 +1,38 @@
+<configuration>
+    <springProperty name="logFileLocation" source="app.logging.file-location"/>
+    <springProperty name="maxLogFileSize" source="app.logging.max-file-size"/>
+    <springProperty name="maxLogHistory" source="app.logging.max-history"/>
+    <springProperty name="totalSizeCap" source="app.logging.total-size-cap"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss} [%thread] %level %logger{36} - %msg \(%file:%line\)%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="info-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logFileLocation}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${infoLogFileLocation}.%d{yyyy-MM-dd}.log.tar.gz</fileNamePattern>
+            <maxHistory>${maxLogHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss'Z'} [%thread] %level %logger{36} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="info-file"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="info-file"/>
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+</configuration>

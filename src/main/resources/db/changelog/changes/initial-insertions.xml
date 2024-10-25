@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="6" author="mzafeiropoulos">
+        <insert tableName="clearing_cost">
+            <column name="id" value="123e4567-e89b-12d3-a456-426614174000"/>
+            <column name="card_issuing_country" value="US"/>
+            <column name="clearing_cost_value" value="20.000"/>
+            <column name="created_date" value="2024-01-01T00:00:00"/>
+            <column name="modified_date" value="2024-02-01T00:00:00"/>
+            <column name="created_by" value="123e4567-e89b-12d3-a456-426614174000"/>
+            <column name="modified_by" value="123e4567-e89b-12d3-a456-426614174000"/>
+        </insert>
+
+        <insert tableName="clearing_cost">
+            <column name="id" value="223e4567-e89b-12d3-a456-426614174001"/>
+            <column name="card_issuing_country" value="GR"/>
+            <column name="clearing_cost_value" value="15.000"/>
+            <column name="created_date" value="2024-01-02T00:00:00"/>
+            <column name="modified_date" value="null"/>
+            <column name="created_by" value="223e4567-e89b-12d3-a456-426614174001"/>
+            <column name="modified_by" value="null"/>
+        </insert>
+
+        <insert tableName="clearing_cost">
+            <column name="id" value="323e4567-e89b-12d3-a456-426614174002"/>
+            <column name="card_issuing_country" value="FR"/>
+            <column name="clearing_cost_value" value="10.000"/>
+            <column name="created_date" value="2024-01-03T00:00:00"/>
+            <column name="modified_date" value="2024-02-03T00:00:00"/>
+            <column name="created_by" value="323e4567-e89b-12d3-a456-426614174002"/>
+            <column name="modified_by" value="323e4567-e89b-12d3-a456-426614174002"/>
+        </insert>
+
+        <insert tableName="clearing_cost">
+            <column name="id" value="8ca06904-c20a-4412-baac-79e68b4a66d3"/>
+            <column name="card_issuing_country" value="OT"/>
+            <column name="clearing_cost_value" value="5.000"/>
+            <column name="created_date" value="2024-01-03T00:00:00"/>
+            <column name="modified_date" value="null"/>
+            <column name="created_by" value="8ca06904-c20a-4412-baac-79e68b4a66d3"/>
+            <column name="modified_by" value="null"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="7" author="mzafeiropoulos">
+        <insert tableName="users">
+                <column name="id" value="c4bb9cf4-96ab-4c78-98f1-1d4fdbc5e917"/>
+            <column name="username" value="demo"/>
+            <column name="password" value="$2y$10$eUEhpT2955IHC.a9xeXdcu0S22LBbGbNrM5j2eGzWh431kvSl4WTq"/>
+            <column name="role" value="ROLE_ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="8" author="mzafeiropoulos">
+        <insert tableName="users">
+            <column name="id" value="436bc93b-56ed-4b5c-b89d-cbc36b35b8c1"/>
+            <column name="username" value="demo2"/>
+            <column name="password" value="$2y$10$eUEhpT2955IHC.a9xeXdcu0S22LBbGbNrM5j2eGzWh431kvSl4WTq"/>
+            <column name="role" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="9" author="mzafeiropoulos">
+        <insert tableName="revinfo">
+            <column name="REV" value="1"/>
+            <column name="REVTSTMP" value="1729707416889"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

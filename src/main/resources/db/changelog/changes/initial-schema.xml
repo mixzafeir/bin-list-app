@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="mzafeiropoulos">
+        <createTable tableName="clearing_cost">
+            <column name="id" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="card_issuing_country" type="VARCHAR(2)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="clearing_cost_value" type="NUMERIC(15,3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="CHAR(36)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified_by" type="CHAR(36)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="mzafeiropoulos">
+        <createTable tableName="users">
+            <column name="id" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(15)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="mzafeiropoulos">
+        <createTable tableName="revinfo">
+            <column name="rev" type="INT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="revtstmp" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="mzafeiropoulos">
+        <createTable tableName="clearing_cost_aud">
+            <column name="card_issuing_country" type="VARCHAR(2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="clearing_cost_value" type="NUMERIC(15,3)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="id" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="rev, id" tableName="clearing_cost_aud"/>
+        <addForeignKeyConstraint baseColumnNames="rev"
+                                 baseTableName="clearing_cost_aud"
+                                 constraintName="FKcafaxehdl7a7jtlbr79ufo308"
+                                 referencedColumnNames="rev"
+                                 referencedTableName="revinfo"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="5" author="mzafeiropoulos">
+        <createTable tableName="users_aud">
+            <column name="id" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="rev, id" tableName="users_aud"/>
+        <addForeignKeyConstraint baseColumnNames="rev"
+                                 baseTableName="users_aud"
+                                 constraintName="FK_users_aud_revinfo"
+                                 referencedColumnNames="rev"
+                                 referencedTableName="revinfo"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
