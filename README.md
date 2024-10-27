@@ -122,7 +122,7 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 1. **Clone the Repository**
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/mixzafeir/bin-list-app.git
    cd bin-list-app
    ```
 
