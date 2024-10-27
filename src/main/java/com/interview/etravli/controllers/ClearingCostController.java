@@ -31,17 +31,17 @@ public class ClearingCostController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ClearingCost> createClearingCost(@AuthenticationPrincipal UserPrincipal principal,
+    public ResponseEntity<ClearingCostDTO> createClearingCost(@AuthenticationPrincipal UserPrincipal principal,
                                                                    @Valid @RequestBody ClearingCostDTO dto) {
-        ClearingCost newClearingCost = clearingCostService.save(principal, dto);
+        ClearingCostDTO newClearingCost = clearingCostService.save(principal, dto);
         return new ResponseEntity<>(newClearingCost, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ClearingCost> updateClearingCost(@PathVariable UUID id,
+    public ResponseEntity<ClearingCostDTO> updateClearingCost(@PathVariable UUID id,
                                                            @AuthenticationPrincipal UserPrincipal principal,
                                                            @Valid @RequestBody ClearingCostDTO dto) {
-        ClearingCost newClearingCost = clearingCostService.update(principal, id, dto);
+        ClearingCostDTO newClearingCost = clearingCostService.update(principal, id, dto);
         return new ResponseEntity<>(newClearingCost, HttpStatus.OK);
     }
 
@@ -52,8 +52,8 @@ public class ClearingCostController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<ClearingCostDTO> getClearingCostById(@PathVariable UUID id) {
-        ClearingCostDTO clearingCost = clearingCostService.getById(id);
+    public ResponseEntity<ClearingCostResponseDTO> getClearingCostById(@PathVariable UUID id) {
+        ClearingCostResponseDTO clearingCost = clearingCostService.getById(id);
         return new ResponseEntity<>(clearingCost, HttpStatus.OK);
     }
 

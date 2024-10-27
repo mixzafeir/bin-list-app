@@ -65,7 +65,7 @@ public class ClearingCostServiceTest {
     @Test
     void testSaveClearingCost() {
         when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
-        ClearingCost savedClearingCost = clearingCostService.save(principal, clearingCostDTO);
+        ClearingCostDTO savedClearingCost = clearingCostService.save(principal, clearingCostDTO);
         assertNotNull(savedClearingCost);
         assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
     }
@@ -76,7 +76,7 @@ public class ClearingCostServiceTest {
         clearingCost.setClearingCost(new BigDecimal("5.00"));
         when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
         when(clearingCostRepo.findById(testUUID)).thenReturn(Optional.of(clearingCost));
-        ClearingCost savedClearingCost = clearingCostService.update(principal, testUUID, clearingCostDTO);
+        ClearingCostDTO savedClearingCost = clearingCostService.update(principal, testUUID, clearingCostDTO);
         assertNotNull(savedClearingCost);
         assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
     }
@@ -94,7 +94,7 @@ public class ClearingCostServiceTest {
     void testGetClearingCostById_Found() {
         UUID id = clearingCost.getId();
         when(clearingCostRepo.findById(id)).thenReturn(Optional.of(clearingCost));
-        ClearingCostDTO result = clearingCostService.getById(id);
+        ClearingCostResponseDTO result = clearingCostService.getById(id);
         assertNotNull(result);
         assertEquals(clearingCostDTO.getClearingCost(), new BigDecimal("20.000"));
     }

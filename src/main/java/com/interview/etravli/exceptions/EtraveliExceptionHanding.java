@@ -64,8 +64,8 @@ public class EtraveliExceptionHanding {
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({BadRequestException.class})
-    public ResponseEntity<EtraveliExceptionDTO> handleBadRequestException(BadRequestException e) {
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity<EtraveliExceptionDTO> handleBadRequestException(ValidationException e) {
         EtraveliExceptionDTO error = new EtraveliExceptionDTO();
         error.setMessage(e.getMessage());
         error.setCode(400);

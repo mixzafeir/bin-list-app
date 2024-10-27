@@ -5,7 +5,7 @@ import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
 import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.dto.feign.BinListFeignDTO;
 import com.interview.etravli.enums.ExceptionMessages;
-import com.interview.etravli.exceptions.BadRequestException;
+import com.interview.etravli.exceptions.ValidationException;
 import com.interview.etravli.exceptions.EntityNotFoundException;
 import com.interview.etravli.models.ClearingCost;
 import com.interview.etravli.repository.ClearingCostRepository;
@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +37,7 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     @Override
     @Transactional
-    public ClearingCost save(UserPrincipal principal, ClearingCostDTO clearingCostDto){
+    public ClearingCostDTO save(UserPrincipal principal, ClearingCostDTO clearingCostDto){
         LOGGER.warn("Staring save clearing cost");
         ClearingCost newCost = new ClearingCost();
         newCost.setClearingCost(clearingCostDto.getClearingCost());
@@ -46,15 +45,15 @@ public class ClearingCostServiceImpl implements ClearingCostService {
         newCost.setCreatedBy(principal.getUsername());
         clearingCostRepo.save(newCost);
         LOGGER.warn("Clearing cost saved");
-        return newCost;
+        return entityToDtoMapping(newCost);
     }
 
     @Override
     @Transactional
-    public ClearingCost update(UserPrincipal principal, UUID id, ClearingCostDTO clearingCostDto){
+    public ClearingCostDTO update(UserPrincipal principal, UUID id, ClearingCostDTO clearingCostDto){
         LOGGER.warn("Updating clearing cost");
         if(id == null){
-            throw new BadRequestException(ExceptionMessages.ID_CANNOT_BE_NULL);
+            throw new ValidationException(ExceptionMessages.ID_CANNOT_BE_NULL);
         }
         ClearingCost cost = clearingCostRepo.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(ExceptionMessages.CLEARING_COST_NOT_FOUND)
@@ -64,7 +63,7 @@ public class ClearingCostServiceImpl implements ClearingCostService {
         cost.setModifiedBy(principal.getUsername());
         clearingCostRepo.save(cost);
         LOGGER.warn("Clearing cost updated");
-        return cost;
+        return entityToDtoMapping(cost);
     }
 
     @Override
@@ -76,12 +75,12 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     @Override
     @Transactional
-    public ClearingCostDTO getById(UUID id) {
+    public ClearingCostResponseDTO getById(UUID id) {
         LOGGER.info("Fetching clearing cost by id: {}", id.toString());
         ClearingCost result = clearingCostRepo.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(ExceptionMessages.CLEARING_COST_NOT_FOUND)
         );
-        return entityToDtoMapping(result);
+        return entityToResponseDto(result);
     }
 
     @Override
@@ -110,8 +109,16 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     private ClearingCostDTO entityToDtoMapping(ClearingCost clearingCost){
         ClearingCostDTO dto = new ClearingCostDTO();
+        dto.setId(clearingCost.getId());
         dto.setClearingCost(clearingCost.getClearingCost());
         dto.setCardIssuingCountry(clearingCost.getCardIssuingCountry());
+        return dto;
+    }
+
+    private ClearingCostResponseDTO entityToResponseDto(ClearingCost clearingCost){
+        ClearingCostResponseDTO dto = new ClearingCostResponseDTO();
+        dto.setCountry(clearingCost.getCardIssuingCountry());
+        dto.setCost(clearingCost.getClearingCost());
         return dto;
     }
 
