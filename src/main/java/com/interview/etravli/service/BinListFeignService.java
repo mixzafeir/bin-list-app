@@ -2,8 +2,10 @@ package com.interview.etravli.service;
 
 import com.interview.etravli.dto.feign.BinListFeignDTO;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface BinListFeignService {
 
-    BinListFeignDTO getCardInfoFromFeign(String cardNumber);
+    CompletableFuture<BinListFeignDTO> getCardInfoFromFeign(String cardNumber);
 
 }

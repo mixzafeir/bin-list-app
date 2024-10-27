@@ -64,16 +64,6 @@ public class EtraveliExceptionHanding {
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({BadRequestException.class})
-    public ResponseEntity<EtraveliExceptionDTO> handleBadRequestException(BadRequestException e) {
-        EtraveliExceptionDTO error = new EtraveliExceptionDTO();
-        error.setMessage(e.getMessage());
-        error.setCode(400);
-        error.setStatus(HttpStatus.BAD_REQUEST);
-        logException(e.getStackTrace(), e.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler({FeignException.class})
     public ResponseEntity<EtraveliExceptionDTO> handleFeignException(FeignException e) {
         EtraveliExceptionDTO error = new EtraveliExceptionDTO();
@@ -99,6 +89,16 @@ public class EtraveliExceptionHanding {
         error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         logException(e.getStackTrace(), e.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({ValidationException.class})
+    public ResponseEntity<EtraveliExceptionDTO> handleValidationException(ValidationException e) {
+        EtraveliExceptionDTO error = new EtraveliExceptionDTO();
+        error.setMessage(e.getMessage());
+        error.setCode(400);
+        error.setStatus(HttpStatus.BAD_REQUEST);
+        logException(e.getStackTrace(), e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({AuthorizationException.class})

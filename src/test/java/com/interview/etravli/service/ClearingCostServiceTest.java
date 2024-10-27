@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,7 +66,7 @@ public class ClearingCostServiceTest {
     @Test
     void testSaveClearingCost() {
         when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
-        ClearingCost savedClearingCost = clearingCostService.save(principal, clearingCostDTO);
+        ClearingCostDTO savedClearingCost = clearingCostService.save(principal, clearingCostDTO);
         assertNotNull(savedClearingCost);
         assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
     }
@@ -76,7 +77,7 @@ public class ClearingCostServiceTest {
         clearingCost.setClearingCost(new BigDecimal("5.00"));
         when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
         when(clearingCostRepo.findById(testUUID)).thenReturn(Optional.of(clearingCost));
-        ClearingCost savedClearingCost = clearingCostService.update(principal, testUUID, clearingCostDTO);
+        ClearingCostDTO savedClearingCost = clearingCostService.update(principal, testUUID, clearingCostDTO);
         assertNotNull(savedClearingCost);
         assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
     }
@@ -94,7 +95,7 @@ public class ClearingCostServiceTest {
     void testGetClearingCostById_Found() {
         UUID id = clearingCost.getId();
         when(clearingCostRepo.findById(id)).thenReturn(Optional.of(clearingCost));
-        ClearingCostDTO result = clearingCostService.getById(id);
+        ClearingCostResponseDTO result = clearingCostService.getById(id);
         assertNotNull(result);
         assertEquals(clearingCostDTO.getClearingCost(), new BigDecimal("20.000"));
     }
@@ -128,11 +129,18 @@ public class ClearingCostServiceTest {
         CountryFeignDTO countryDto = new CountryFeignDTO();
         countryDto.setAlpha2("US");
         binListFeignDto.setCountry(countryDto);
-        when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))).thenReturn(binListFeignDto);
+
+        ClearingCost clearingCost = new ClearingCost();
+        clearingCost.setClearingCost(new BigDecimal("20.000"));
+        clearingCost.setCardIssuingCountry("US");
+        when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6)))
+                .thenReturn(CompletableFuture.completedFuture(binListFeignDto));
         when(clearingCostRepo.findByCardIssuingCountry("US")).thenReturn(Optional.of(clearingCost));
-        ClearingCostResponseDTO result = clearingCostService.getByCardNumber(cardNumber);
+        CompletableFuture<ClearingCostResponseDTO> resultFuture = clearingCostService.getByCardNumber(cardNumber);
+        ClearingCostResponseDTO result = resultFuture.join();
         assertNotNull(result);
-        assertEquals(clearingCostDTO.getClearingCost(), new BigDecimal("20.000"));
+        assertEquals(new BigDecimal("20.000"), result.getCost());
+        assertEquals("US", result.getCountry());
     }
 
     @Test
@@ -145,10 +153,12 @@ public class ClearingCostServiceTest {
         clearingCost.setClearingCost(new BigDecimal("10.000"));
         clearingCost.setCardIssuingCountry("OT");
 
-        when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))).thenReturn(binListFeignDto);
+        when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6)))
+                .thenReturn(CompletableFuture.completedFuture(binListFeignDto));
         when(clearingCostRepo.findByCardIssuingCountry("SM")).thenReturn(Optional.empty());
         when(clearingCostRepo.findByCardIssuingCountry("OT")).thenReturn(Optional.of(clearingCost));
-        ClearingCostResponseDTO result = clearingCostService.getByCardNumber(cardNumber);
+        CompletableFuture<ClearingCostResponseDTO> resultFuture = clearingCostService.getByCardNumber(cardNumber);
+        ClearingCostResponseDTO result = resultFuture.join();
         assertNotNull(result);
         assertEquals(new BigDecimal("10.000"), result.getCost());
     }
@@ -163,10 +173,11 @@ public class ClearingCostServiceTest {
         clearingCost.setClearingCost(new BigDecimal("10.000"));
         clearingCost.setCardIssuingCountry("OT");
 
-        when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))).thenReturn(binListFeignDto);
+        when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6)))
+                .thenReturn(CompletableFuture.completedFuture(binListFeignDto));
         when(clearingCostRepo.findByCardIssuingCountry("SM")).thenReturn(Optional.empty());
         when(clearingCostRepo.findByCardIssuingCountry("OT")).thenReturn(Optional.empty());
-        assertThrows(RuntimeException.class, () -> clearingCostService.getByCardNumber(cardNumber));
+        assertThrows(RuntimeException.class, () -> clearingCostService.getByCardNumber(cardNumber).join());
     }
 
 }

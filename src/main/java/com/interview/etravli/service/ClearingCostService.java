@@ -7,19 +7,20 @@ import com.interview.etravli.models.ClearingCost;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface ClearingCostService {
 
-    ClearingCost save(UserPrincipal user, ClearingCostDTO clearingCostDto);
+    ClearingCostDTO save(UserPrincipal user, ClearingCostDTO clearingCostDto);
 
-    ClearingCost update(UserPrincipal user, UUID id, ClearingCostDTO clearingCostDto);
+    ClearingCostDTO update(UserPrincipal user, UUID id, ClearingCostDTO clearingCostDto);
 
     List<ClearingCostDTO> getAll();
 
-    ClearingCostDTO getById(UUID id);
+    ClearingCostResponseDTO getById(UUID id);
 
     void deleteById(UUID id);
 
-    ClearingCostResponseDTO getByCardNumber(String cardNumber);
+    CompletableFuture<ClearingCostResponseDTO> getByCardNumber(String cardNumber);
 
 }

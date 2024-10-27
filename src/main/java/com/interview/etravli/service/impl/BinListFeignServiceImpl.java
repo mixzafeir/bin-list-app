@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class BinListFeignServiceImpl implements BinListFeignService {
@@ -22,10 +25,12 @@ public class BinListFeignServiceImpl implements BinListFeignService {
     }
 
     @Override
+    @Async
     @Cacheable(value = "cardNumberCache", key = "#cardNumber", unless = "#result == null")
-    public BinListFeignDTO getCardInfoFromFeign(String cardNumber) {
+    public CompletableFuture<BinListFeignDTO> getCardInfoFromFeign(String cardNumber) {
         LOGGER.info("Fetching BIN LIST for card number from feign: {}", cardNumber);
-        return binListFeignClient.getCardInfoBinList(cardNumber, "3");
+        return CompletableFuture.
+                supplyAsync(() -> binListFeignClient.getCardInfoBinList(cardNumber, "3"));
     }
 
 }
