@@ -12,7 +12,7 @@ public interface ClearingCostService {
 
     ClearingCostDTO save(UserPrincipal user, ClearingCostDTO clearingCostDto);
 
-    ClearingCostDTO update(UserPrincipal user, UUID id, ClearingCostDTO clearingCostDto);
+    ClearingCostDTO update(UserPrincipal user, ClearingCostDTO clearingCostDto);
 
     List<ClearingCostDTO> getAll();
 

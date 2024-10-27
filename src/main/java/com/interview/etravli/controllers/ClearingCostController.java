@@ -41,7 +41,7 @@ public class ClearingCostController {
     public ResponseEntity<ClearingCostDTO> updateClearingCost(@PathVariable UUID id,
                                                            @AuthenticationPrincipal UserPrincipal principal,
                                                            @Valid @RequestBody ClearingCostDTO dto) {
-        ClearingCostDTO newClearingCost = clearingCostService.update(principal, id, dto);
+        ClearingCostDTO newClearingCost = clearingCostService.update(principal, dto);
         return new ResponseEntity<>(newClearingCost, HttpStatus.OK);
     }
 

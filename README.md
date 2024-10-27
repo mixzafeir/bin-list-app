@@ -111,12 +111,6 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 
 ## Installation and Setup
 
-### Prerequisites
-
-- **Java 11** (or higher)
-- **Docker** and **Docker Compose**
-- **MySQL** (if running without Docker)
-
 ### Running the Application
 
 1. **Clone the Repository**
@@ -154,6 +148,5 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 
 - **JWT Authentication**: Secure endpoints with role-based access control.
 - **Environment-Specific Secrets**: Sensitive information is managed with `.env` files in production.
-- **Rate Limiting**: Cached results reduce reliance on external API calls, preventing service interruption due to rate limits.
 
 ---

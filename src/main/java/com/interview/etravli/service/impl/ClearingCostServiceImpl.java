@@ -50,12 +50,12 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     @Override
     @Transactional
-    public ClearingCostDTO update(UserPrincipal principal, UUID id, ClearingCostDTO clearingCostDto){
+    public ClearingCostDTO update(UserPrincipal principal, ClearingCostDTO clearingCostDto){
         LOGGER.warn("Updating clearing cost");
-        if(id == null){
+        if(clearingCostDto.getId() == null){
             throw new ValidationException(ExceptionMessages.ID_CANNOT_BE_NULL);
         }
-        ClearingCost cost = clearingCostRepo.findById(id).orElseThrow(
+        ClearingCost cost = clearingCostRepo.findById(clearingCostDto.getId()).orElseThrow(
                 () -> new EntityNotFoundException(ExceptionMessages.CLEARING_COST_NOT_FOUND)
         );
         cost.setClearingCost(clearingCostDto.getClearingCost());

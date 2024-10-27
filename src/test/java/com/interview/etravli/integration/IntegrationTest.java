@@ -34,6 +34,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -128,7 +129,11 @@ public class IntegrationTest {
                         .header("Authorization", adminToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.clearingCost").value(new BigDecimal("15.0")));
+                .andExpect(jsonPath("$.cost").value(new BigDecimal("15.0")));
+        requestBody = String.format(
+                "{ \"id\": \"223e4567-e89b-12d3-a456-426614174001\", \"cardIssuingCountry\": \"%s\", \"clearingCost\": %.3f }",
+                cardIssuingCountry, clearingCost
+        );
 
         mockMvc.perform(put("/api/clearing-cost/update/223e4567-e89b-12d3-a456-426614174001")
                         .header("Authorization", adminToken)
