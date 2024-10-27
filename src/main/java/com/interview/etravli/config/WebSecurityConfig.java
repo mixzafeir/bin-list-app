@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.time.Duration;
+import java.util.concurrent.Executor;
 
 @Configuration
 @EnableWebSecurity
@@ -45,20 +46,14 @@ public class WebSecurityConfig implements AsyncConfigurer {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-
-    @Bean
-    public TaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor delegate = new ThreadPoolTaskExecutor();
-        delegate.setCorePoolSize(10); // Adjust pool size as needed
-        delegate.setMaxPoolSize(50);
-        delegate.setQueueCapacity(100);
-        delegate.initialize();
-        return new DelegatingSecurityContextAsyncTaskExecutor(delegate);
-    }
-
     @Override
-    public TaskExecutor getAsyncExecutor() {
-        return taskExecutor();
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(15);
+        taskExecutor.setMaxPoolSize(50);
+        taskExecutor.setQueueCapacity(100);
+        taskExecutor.initialize();
+        return new DelegatingSecurityContextAsyncTaskExecutor(taskExecutor);
     }
 
 }
