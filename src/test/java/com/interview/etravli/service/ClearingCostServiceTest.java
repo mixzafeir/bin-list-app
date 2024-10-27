@@ -1,8 +1,11 @@
 package com.interview.etravli.service;
 
 import com.interview.etravli.dto.etraveli.ClearingCostDTO;
+import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
+import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.dto.feign.BinListFeignDTO;
 import com.interview.etravli.dto.feign.CountryFeignDTO;
+import com.interview.etravli.enums.Roles;
 import com.interview.etravli.exceptions.EntityNotFoundException;
 import com.interview.etravli.models.ClearingCost;
 import com.interview.etravli.repository.ClearingCostRepository;
@@ -13,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,6 +41,7 @@ public class ClearingCostServiceTest {
 
     private ClearingCost clearingCost;
     private ClearingCostDTO clearingCostDTO;
+    private UserPrincipal principal;
 
     @BeforeEach
     void setUp() {
@@ -49,16 +53,33 @@ public class ClearingCostServiceTest {
         clearingCostDTO = new ClearingCostDTO();
         clearingCostDTO.setCardIssuingCountry("US");
         clearingCostDTO.setClearingCost(new BigDecimal("20.000"));
+
+        principal = UserPrincipal.builder()
+                .username("mock")
+                .password("mock")
+                .role(Roles.ROLE_ADMIN)
+                .authority(new SimpleGrantedAuthority("mock"))
+                .build();;
     }
 
     @Test
     void testSaveClearingCost() {
         when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
-        ClearingCost savedClearingCost = clearingCostService.save(clearingCostDTO);
+        ClearingCost savedClearingCost = clearingCostService.save(principal, clearingCostDTO);
         assertNotNull(savedClearingCost);
         assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
     }
 
+    @Test
+    void testUpdateClearingCost() {
+        UUID testUUID = UUID.randomUUID();
+        clearingCost.setClearingCost(new BigDecimal("5.00"));
+        when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
+        when(clearingCostRepo.findById(testUUID)).thenReturn(Optional.of(clearingCost));
+        ClearingCost savedClearingCost = clearingCostService.update(principal, testUUID, clearingCostDTO);
+        assertNotNull(savedClearingCost);
+        assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
+    }
 
     @Test
     void testGetAllClearingCosts() {
@@ -109,7 +130,7 @@ public class ClearingCostServiceTest {
         binListFeignDto.setCountry(countryDto);
         when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))).thenReturn(binListFeignDto);
         when(clearingCostRepo.findByCardIssuingCountry("US")).thenReturn(Optional.of(clearingCost));
-        ClearingCostDTO result = clearingCostService.getByCardNumber(cardNumber);
+        ClearingCostResponseDTO result = clearingCostService.getByCardNumber(cardNumber);
         assertNotNull(result);
         assertEquals(clearingCostDTO.getClearingCost(), new BigDecimal("20.000"));
     }
@@ -127,9 +148,9 @@ public class ClearingCostServiceTest {
         when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))).thenReturn(binListFeignDto);
         when(clearingCostRepo.findByCardIssuingCountry("SM")).thenReturn(Optional.empty());
         when(clearingCostRepo.findByCardIssuingCountry("OT")).thenReturn(Optional.of(clearingCost));
-        ClearingCostDTO result = clearingCostService.getByCardNumber(cardNumber);
+        ClearingCostResponseDTO result = clearingCostService.getByCardNumber(cardNumber);
         assertNotNull(result);
-        assertEquals(new BigDecimal("10.000"), result.getClearingCost());
+        assertEquals(new BigDecimal("10.000"), result.getCost());
     }
 
     @Test

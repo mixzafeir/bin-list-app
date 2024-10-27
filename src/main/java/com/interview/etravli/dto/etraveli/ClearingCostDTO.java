@@ -6,9 +6,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 public class ClearingCostDTO {
+
+    private UUID id;
 
     @NotNull(message = "Card issuing country must not be null.")
     @Size(max = 2, message = "Card issuing country must be exactly 2 characters.")

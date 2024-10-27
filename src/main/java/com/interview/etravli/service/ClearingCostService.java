@@ -1,6 +1,8 @@
 package com.interview.etravli.service;
 
 import com.interview.etravli.dto.etraveli.ClearingCostDTO;
+import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
+import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.models.ClearingCost;
 
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.UUID;
 
 public interface ClearingCostService {
 
-    ClearingCost save(ClearingCostDTO clearingCostDto);
+    ClearingCost save(UserPrincipal user, ClearingCostDTO clearingCostDto);
+
+    ClearingCost update(UserPrincipal user, UUID id, ClearingCostDTO clearingCostDto);
 
     List<ClearingCostDTO> getAll();
 
@@ -16,6 +20,6 @@ public interface ClearingCostService {
 
     void deleteById(UUID id);
 
-    ClearingCostDTO getByCardNumber(String cardNumber);
+    ClearingCostResponseDTO getByCardNumber(String cardNumber);
 
 }

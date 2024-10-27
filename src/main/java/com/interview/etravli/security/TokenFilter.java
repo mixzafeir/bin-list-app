@@ -25,13 +25,10 @@ import java.io.IOException;
 
 public class TokenFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClearingCostServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenFilter.class);
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    @Autowired
-    private UsersService usersService;
 
     @Autowired
     private EtraveliUserDetailsServiceImpl etraveliUserDetails;

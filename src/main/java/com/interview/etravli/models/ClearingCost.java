@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Audited
-public class ClearingCost extends Auditable<UUID> implements Serializable {
+public class ClearingCost extends Auditable<String> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

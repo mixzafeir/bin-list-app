@@ -1,6 +1,8 @@
 package com.interview.etravli.service.impl;
 
 import com.interview.etravli.dto.etraveli.ClearingCostDTO;
+import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
+import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.dto.feign.BinListFeignDTO;
 import com.interview.etravli.enums.ExceptionMessages;
 import com.interview.etravli.exceptions.EntityNotFoundException;
@@ -34,14 +36,30 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     @Override
     @Transactional
-    public ClearingCost save(ClearingCostDTO clearingCostDto){
+    public ClearingCost save(UserPrincipal principal, ClearingCostDTO clearingCostDto){
         LOGGER.warn("Staring save clearing cost");
         ClearingCost newCost = new ClearingCost();
         newCost.setClearingCost(clearingCostDto.getClearingCost());
         newCost.setCardIssuingCountry(clearingCostDto.getCardIssuingCountry().toUpperCase());
+        newCost.setCreatedBy(principal.getUsername());
         clearingCostRepo.save(newCost);
         LOGGER.warn("Clearing cost saved");
         return newCost;
+    }
+
+    @Override
+    @Transactional
+    public ClearingCost update(UserPrincipal principal, UUID id, ClearingCostDTO clearingCostDto){
+        LOGGER.warn("Updating clearing cost");
+        ClearingCost cost = clearingCostRepo.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(ExceptionMessages.CLEARING_COST_NOT_FOUND)
+        );
+        cost.setClearingCost(clearingCostDto.getClearingCost());
+        cost.setCardIssuingCountry(clearingCostDto.getCardIssuingCountry().toUpperCase());
+        cost.setModifiedBy(principal.getUsername());
+        clearingCostRepo.save(cost);
+        LOGGER.warn("Clearing cost updated");
+        return cost;
     }
 
     @Override
@@ -73,13 +91,16 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     @Override
     @Transactional
-    public ClearingCostDTO getByCardNumber(String cardNumber){
+    public ClearingCostResponseDTO getByCardNumber(String cardNumber){
         BinListFeignDTO feignResult = binListFeignService.getCardInfoFromFeign(cardNumber.substring(0,6));
         LOGGER.info("Fetching clearing cost by country code: {}", feignResult.getCountry());
         ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getAlpha2()).orElseGet(
                 () -> clearingCostRepo.findByCardIssuingCountry("OT")
                         .orElseThrow(RuntimeException::new));
-        return entityToDtoMapping(result);
+        ClearingCostResponseDTO dto = new ClearingCostResponseDTO();
+        dto.setCost(result.getClearingCost());
+        dto.setCountry(result.getCardIssuingCountry());
+        return dto;
     }
 
     private ClearingCostDTO entityToDtoMapping(ClearingCost clearingCost){

@@ -1,6 +1,9 @@
 package com.interview.etravli.controllers;
 
+import com.interview.etravli.dto.etraveli.CardNumberDTO;
 import com.interview.etravli.dto.etraveli.ClearingCostDTO;
+import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
+import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.models.ClearingCost;
 import com.interview.etravli.service.ClearingCostService;
 import jakarta.validation.Valid;
@@ -8,6 +11,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +31,18 @@ public class ClearingCostController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ClearingCost> createOrUpdateClearingCost(@Valid @RequestBody ClearingCostDTO dto) {
-        ClearingCost newClearingCost = clearingCostService.save(dto);
+    public ResponseEntity<ClearingCost> createClearingCost(@AuthenticationPrincipal UserPrincipal principal,
+                                                                   @Valid @RequestBody ClearingCostDTO dto) {
+        ClearingCost newClearingCost = clearingCostService.save(principal, dto);
         return new ResponseEntity<>(newClearingCost, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ClearingCost> updateClearingCost(@PathVariable UUID id,
+                                                           @AuthenticationPrincipal UserPrincipal principal,
+                                                           @Valid @RequestBody ClearingCostDTO dto) {
+        ClearingCost newClearingCost = clearingCostService.update(principal, id, dto);
+        return new ResponseEntity<>(newClearingCost, HttpStatus.OK);
     }
 
     @GetMapping("/get-all")
@@ -50,12 +63,9 @@ public class ClearingCostController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/card-number/{cardNumber}")
-    public ResponseEntity<ClearingCostDTO> getClearingCostById(@PathVariable
-                                                                   @Size(min=8,
-                                                                         max=19,
-                                                                         message="Wrong Card Number") String cardNumber) {
-        ClearingCostDTO clearingCost = clearingCostService.getByCardNumber(cardNumber);
+    @PostMapping("/payment-cards-cost")
+    public ResponseEntity<ClearingCostResponseDTO> getClearingCostById(@Valid @RequestBody CardNumberDTO dto) {
+        ClearingCostResponseDTO clearingCost = clearingCostService.getByCardNumber(dto.getCard_number());
         return new ResponseEntity<>(clearingCost, HttpStatus.OK);
     }
 

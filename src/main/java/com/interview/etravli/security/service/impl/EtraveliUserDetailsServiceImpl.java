@@ -19,15 +19,15 @@
             this.usersService = usersService;
         }
 
-            @Override
-            public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
-                Users user = usersService.findByUsername(username);
-                return UserPrincipal.builder()
-                        .username(user.getUsername())
-                        .password(user.getPassword())
-                        .role(user.getRole())
-                        .authority(new SimpleGrantedAuthority(user.getRole().toString()))
-                        .build();
-            }
+        @Override
+        public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
+            Users user = usersService.findByUsername(username);
+            return UserPrincipal.builder()
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .role(user.getRole())
+                    .authority(new SimpleGrantedAuthority(user.getRole().toString()))
+                    .build();
+        }
 
     }
