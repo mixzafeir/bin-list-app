@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.data.redis.stream.Task;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,12 @@ public class BinListFeignServiceImpl implements BinListFeignService {
 
     private final BinListFeignClient binListFeignClient;
 
+    private TaskExecutor taskExecutor;
+
     @Autowired
-    public BinListFeignServiceImpl(BinListFeignClient binListFeignClient){
+    public BinListFeignServiceImpl(BinListFeignClient binListFeignClient, TaskExecutor taskExecutor){
         this.binListFeignClient = binListFeignClient;
+        this.taskExecutor = taskExecutor;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class BinListFeignServiceImpl implements BinListFeignService {
     public CompletableFuture<BinListFeignDTO> getCardInfoFromFeign(String cardNumber) {
         LOGGER.info("Fetching BIN LIST for card number from feign: {}", cardNumber);
         return CompletableFuture.
-                supplyAsync(() -> binListFeignClient.getCardInfoBinList(cardNumber, "3"));
+                supplyAsync(() -> binListFeignClient.getCardInfoBinList(cardNumber, "3"), taskExecutor);
     }
 
 }
