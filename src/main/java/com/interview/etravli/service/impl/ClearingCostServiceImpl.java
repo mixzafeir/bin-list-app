@@ -99,7 +99,7 @@ public class ClearingCostServiceImpl implements ClearingCostService {
         return binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))
                 .thenApplyAsync(feignResult -> {
                     LOGGER.info("Fetching clearing cost by country code: {}", feignResult.getCountry());
-                    ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getAlpha2())
+                    ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getA2())
                             .orElseGet(() -> clearingCostRepo.findByCardIssuingCountry("OT")
                                     .orElseThrow(RuntimeException::new));
                     return entityToResponseDtoMapping(result);

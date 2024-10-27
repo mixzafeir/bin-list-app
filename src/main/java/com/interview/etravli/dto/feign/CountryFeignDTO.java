@@ -6,12 +6,11 @@ import java.io.Serializable;
 @Data
 public class CountryFeignDTO implements Serializable{
 
-    private String numeric;
-    private String alpha2;
+    private String A2;
+    private String A3;
+    private String N3;
+    private String ISD;
     private String name;
-    private String emoji;
-    private String currency;
-    private int latitude;
-    private int longitude;
+    private String cont;
 
 }

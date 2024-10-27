@@ -7,12 +7,12 @@ import java.io.Serializable;
 @Data
 public class BinListFeignDTO implements Serializable {
 
-    private NumberFeignDTO number;
-    private String scheme;
-    private String type;
-    private String brand;
+    private String Status;
+    private String Scheme;
+    private String Type;
+    private String Issuer;
+    private String CardTier;
     private boolean prepaid;
     private CountryFeignDTO country;
-    private BankFeignDTO bank;
-
+    private String Luhn;
 }
