@@ -5,6 +5,7 @@ import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
 import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.dto.feign.BinListFeignDTO;
 import com.interview.etravli.enums.ExceptionMessages;
+import com.interview.etravli.exceptions.BadRequestException;
 import com.interview.etravli.exceptions.EntityNotFoundException;
 import com.interview.etravli.models.ClearingCost;
 import com.interview.etravli.repository.ClearingCostRepository;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +53,9 @@ public class ClearingCostServiceImpl implements ClearingCostService {
     @Transactional
     public ClearingCost update(UserPrincipal principal, UUID id, ClearingCostDTO clearingCostDto){
         LOGGER.warn("Updating clearing cost");
+        if(id == null){
+            throw new BadRequestException(ExceptionMessages.ID_CANNOT_BE_NULL);
+        }
         ClearingCost cost = clearingCostRepo.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(ExceptionMessages.CLEARING_COST_NOT_FOUND)
         );
