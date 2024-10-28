@@ -7,15 +7,12 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 
 ### External API Changes
 
-During development, the original external API intended for this project (https://binlist.net/) began returning persistent `403 Forbidden` responses. This was flagged by Cloudflare as a potential phishing API, which caused setbacks and limited the ability to fully explore certain implementation options.
-
-As a workaround, an alternative API was integrated: https://data.handyapi.com/bin. This new API required some adjustments to the initial setup, but the core functionality remains the same. All calls to the **Card Cost API** continue to use the original DTO structure and endpoint setup, ensuring compatibility with the initial specifications. Users should be aware that, while the interface remains consistent, requests are now routed to the alternative API endpoint at HandyAPI.
-
+- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://data.handyapi.com/bin) to retrieve necessary card information. Caching is implemented to handle API limitations effectively.
 
 ## Features
 
 - **CRUD Operations**: Full Create, Read, Update, and Delete operations on clearing costs.
-- **Clearing Cost Calculation**: Determines the clearing cost based on card-issuing country and utilizes caching to handle API limitations.
+- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://www.handyapi.com/bin-list) to retrieve necessary card information. Caching is implemented to handle API limitations effectively.
 - **Authentication & Authorization**: Secure access through JWT-based authentication, with role-based authorization for protected endpoints.
 - **Database & Auditing**: MySQL database with initial data setup via Liquibase and auditing using Hibernate Envers.
 - **High Availability**: Configured to handle up to 7000 requests per minute with optimized server settings.
@@ -107,7 +104,6 @@ As a workaround, an alternative API was integrated: https://data.handyapi.com/bi
 
 ## Technical Details
 
-
 - **External API Call**: Calls to external API (https://data.handyapi.com/bin) are cached in Redis to manage rate limits.
 - **Database**: MySQL database with initial data configured via Liquibase. Contains `users`, `clearing_cost` as well as the auditing tables.
 - **Logging Mechanism**: A robust logging mechanism is implemented using a custom `logback-spring.xml` configuration.
@@ -118,6 +114,13 @@ As a workaround, an alternative API was integrated: https://data.handyapi.com/bi
 - **Testing**:
   - **Unit Tests** and **Integration Tests**: Tests cover CRUD operations and end-to-end flows using an H2 in-memory database.
   - **Caching Test**: External API calls are mocked to avoid rate-limit restrictions during tests.
+
+### External API Changes
+
+During development, the application was initially integrated with the [Binlist API](https://binlist.net/) as the external data source for card information. However, midway through development, the Binlist API began returning 403 Forbidden errors due to Cloudflare marking it as a potential phishing site. This issue forced a switch to an alternative API: https://data.handyapi.com/bin.
+
+While this required some adjustments, the core functionality remains the same. All calls to the **Card Cost API** continue to use the original DTO structure and endpoint setup, ensuring compatibility with the initial specifications. Users should be aware that, although the interface remains consistent, requests are now routed to the HandyAPI endpoint instead.
+
 
 ## Installation and Setup
 
@@ -157,6 +160,19 @@ As a workaround, an alternative API was integrated: https://data.handyapi.com/bi
 ## Security Considerations
 
 - **JWT Authentication**: Secure endpoints with role-based access control.
-- **Environment-Specific Secrets**: Sensitive information is managed with `.env` files in production.
+- **Environment-Specific Secrets**: Sensitive information is managed with `.env` file in production.
+
+## Future Improvements
+
+1. **Async Calls for Enhanced Scalability**: Introduce asynchronous calls within the Card Cost API to decouple processing from the main application thread. This adjustment allows independent scaling of the main thread and the asynchronous thread pool, optimizing resource utilization and maintaining responsiveness under high load conditions.
+
+2. **Reactive Logic with WebClient**: Migrate to reactive programming using Spring's WebClient to enable natively asynchronous, non-blocking calls to external services. This change would improve response times and facilitate better scaling for high-concurrency use cases.
+
+3. **Horizontal Scaling and Distributed Caching**:
+  - For horizontal scalability to support the anticipated load, multiple instances of the application should be deployed. This setup would distribute the load effectively, enhancing resilience and performance under heavy traffic.
+  - **Global Redis Cache**: Implement a global Redis instance layered on top of MySQL to centralize caching across all instances.
+
+
+
 
 ---
