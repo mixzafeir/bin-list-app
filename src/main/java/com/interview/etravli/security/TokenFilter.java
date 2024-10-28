@@ -4,8 +4,6 @@ import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.enums.ExceptionMessages;
 import com.interview.etravli.exceptions.AuthorizationException;
 import com.interview.etravli.security.service.impl.EtraveliUserDetailsServiceImpl;
-import com.interview.etravli.service.UsersService;
-import com.interview.etravli.service.impl.ClearingCostServiceImpl;
 import com.interview.etravli.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

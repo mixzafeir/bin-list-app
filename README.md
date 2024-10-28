@@ -5,6 +5,13 @@
 
 The **Card Cost API** is designed to calculate and manage clearing costs for payment cards based on card-issuing countries. Developed as part of the Etraveli Group hiring process, this API is built in Java with production-grade standards, offering full CRUD operations, caching, role-based access, and more. The API is ready for both development and production environments, with Docker support and MySQL integration.
 
+### External API Changes
+
+During development, the original external API intended for this project (https://binlist.net/) began returning persistent `403 Forbidden` responses. This was flagged by Cloudflare as a potential phishing API, which caused setbacks and limited the ability to fully explore certain implementation options.
+
+As a workaround, an alternative API was integrated: https://data.handyapi.com/bin. This new API required some adjustments to the initial setup, but the core functionality remains the same. All calls to the **Card Cost API** continue to use the original DTO structure and endpoint setup, ensuring compatibility with the initial specifications. Users should be aware that, while the interface remains consistent, requests are now routed to the alternative API endpoint at HandyAPI.
+
+
 ## Features
 
 - **CRUD Operations**: Full Create, Read, Update, and Delete operations on clearing costs.
@@ -100,8 +107,11 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 
 ## Technical Details
 
-- **External API Call**: Calls to external API (https://lookup.binlist.net) are cached in Redis to manage rate limits.
+
+- **External API Call**: Calls to external API (https://data.handyapi.com/bin) are cached in Redis to manage rate limits.
 - **Database**: MySQL database with initial data configured via Liquibase. Contains `users`, `clearing_cost` as well as the auditing tables.
+- **Logging Mechanism**: A robust logging mechanism is implemented using a custom `logback-spring.xml` configuration.
+  This setup enables structured and customizable logging across different environments, ensuring enhanced debugging and monitoring capabilities.
 - **Profiles**:
   - **Development Profile**: No authentication required; endpoints are publicly accessible.
   - **Production Profile**: JWT authentication enforced; all protected endpoints require a valid JWT with `ROLE_ADMIN`.
@@ -136,8 +146,8 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 
 3. **Accessing the API**
 
-   - **Development**: Access the API directly without authentication.
-   - **Production**: Use the login endpoint to obtain a JWT, then use it as a Bearer token in the Authorization header for accessing protected endpoints.
+  - **Development**: Access the API directly without authentication.
+  - **Production**: Use the login endpoint to obtain a JWT, then use it as a Bearer token in the Authorization header for accessing protected endpoints.
 
 ### Environment Variables
 
