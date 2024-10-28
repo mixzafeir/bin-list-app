@@ -81,7 +81,7 @@ public class IntegrationTest {
     void getClearingCostByCardNumberTest() throws Exception {
         BinListFeignDTO mockResponse = new BinListFeignDTO();
         CountryFeignDTO mockCountry = new CountryFeignDTO();
-        mockCountry.setAlpha2("US");
+        mockCountry.setA2("US");
         mockResponse.setCountry(mockCountry);
         when(binListFeignService.getCardInfoFromFeign("123456"))
                 .thenReturn(mockResponse);

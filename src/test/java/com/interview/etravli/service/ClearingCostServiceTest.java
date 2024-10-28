@@ -127,7 +127,7 @@ public class ClearingCostServiceTest {
         String cardNumber = "123456789";
         BinListFeignDTO binListFeignDto = new BinListFeignDTO();
         CountryFeignDTO countryDto = new CountryFeignDTO();
-        countryDto.setAlpha2("US");
+        countryDto.setA2("US");
         binListFeignDto.setCountry(countryDto);
         when(binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))).thenReturn(binListFeignDto);
         when(clearingCostRepo.findByCardIssuingCountry("US")).thenReturn(Optional.of(clearingCost));
@@ -141,7 +141,7 @@ public class ClearingCostServiceTest {
         String cardNumber = "123456789";
         BinListFeignDTO binListFeignDto = new BinListFeignDTO();
         CountryFeignDTO countryDto = new CountryFeignDTO();
-        countryDto.setAlpha2("SM");
+        countryDto.setA2("SM");
         binListFeignDto.setCountry(countryDto);
         clearingCost.setClearingCost(new BigDecimal("10.000"));
         clearingCost.setCardIssuingCountry("OT");
@@ -159,7 +159,7 @@ public class ClearingCostServiceTest {
         String cardNumber = "123456789";
         BinListFeignDTO binListFeignDto = new BinListFeignDTO();
         CountryFeignDTO countryDto = new CountryFeignDTO();
-        countryDto.setAlpha2("SM");
+        countryDto.setA2("SM");
         binListFeignDto.setCountry(countryDto);
         clearingCost.setClearingCost(new BigDecimal("10.000"));
         clearingCost.setCardIssuingCountry("OT");
