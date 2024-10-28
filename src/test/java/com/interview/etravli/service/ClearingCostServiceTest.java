@@ -77,7 +77,7 @@ public class ClearingCostServiceTest {
         when(clearingCostRepo.save(any(ClearingCost.class))).thenReturn(clearingCost);
         when(clearingCostRepo.findById(testUUID)).thenReturn(Optional.of(clearingCost));
         clearingCostDTO.setId(testUUID);
-        ClearingCostDTO savedClearingCost = clearingCostService.update(principal, clearingCostDTO);
+        ClearingCostDTO savedClearingCost = clearingCostService.update(principal, clearingCostDTO, testUUID);
         assertNotNull(savedClearingCost);
         assertEquals(clearingCost.getClearingCost(), savedClearingCost.getClearingCost());
     }

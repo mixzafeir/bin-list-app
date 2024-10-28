@@ -53,7 +53,10 @@ public class ClearingCostServiceImpl implements ClearingCostService {
 
     @Override
     @Transactional
-    public ClearingCostDTO update(UserPrincipal principal, ClearingCostDTO clearingCostDto){
+    public ClearingCostDTO update(UserPrincipal principal, ClearingCostDTO clearingCostDto, UUID id){
+        if(!id.toString().equals(clearingCostDto.getId().toString())){
+            throw new ValidationException(ExceptionMessages.MISMATCH_OF_IDS);
+        }
         LOGGER.warn("Updating clearing cost");
         if(clearingCostDto.getId() == null){
             throw new ValidationException(ExceptionMessages.ID_CANNOT_BE_NULL);
