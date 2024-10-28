@@ -74,6 +74,16 @@ public class EtraveliExceptionHanding {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({CardNumberException.class})
+    public ResponseEntity<EtraveliExceptionDTO> handleBadRequestException(CardNumberException e) {
+        EtraveliExceptionDTO error = new EtraveliExceptionDTO();
+        error.setMessage(e.getMessage());
+        error.setCode(404);
+        error.setStatus(HttpStatus.NOT_FOUND);
+        logException(e.getStackTrace(), e.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler({FeignException.class})
     public ResponseEntity<EtraveliExceptionDTO> handleFeignException(FeignException e) {
         EtraveliExceptionDTO error = new EtraveliExceptionDTO();

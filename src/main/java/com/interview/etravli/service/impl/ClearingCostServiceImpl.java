@@ -5,6 +5,7 @@ import com.interview.etravli.dto.etraveli.ClearingCostResponseDTO;
 import com.interview.etravli.dto.etraveli.UserPrincipal;
 import com.interview.etravli.dto.feign.BinListFeignDTO;
 import com.interview.etravli.enums.ExceptionMessages;
+import com.interview.etravli.exceptions.CardNumberException;
 import com.interview.etravli.exceptions.ValidationException;
 import com.interview.etravli.exceptions.EntityNotFoundException;
 import com.interview.etravli.models.ClearingCost;
@@ -97,6 +98,9 @@ public class ClearingCostServiceImpl implements ClearingCostService {
     @Transactional
     public ClearingCostResponseDTO getByCardNumber(String cardNumber){
         BinListFeignDTO feignResult = binListFeignService.getCardInfoFromFeign(cardNumber.substring(0,6));
+        if(feignResult.getCountry() == null || feignResult.getCountry().getA2() == null){
+            throw new CardNumberException(ExceptionMessages.CARD_NUMBER_DOES_NOT_MATCH_COUNTRY);
+        }
         LOGGER.info("Fetching clearing cost by country code: {}", feignResult.getCountry());
         ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getA2()).orElseGet(
                 () -> clearingCostRepo.findByCardIssuingCountry("OT")
