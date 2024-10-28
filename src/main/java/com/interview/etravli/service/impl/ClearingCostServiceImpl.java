@@ -43,7 +43,9 @@ public class ClearingCostServiceImpl implements ClearingCostService {
         ClearingCost newCost = new ClearingCost();
         newCost.setClearingCost(clearingCostDto.getClearingCost());
         newCost.setCardIssuingCountry(clearingCostDto.getCardIssuingCountry().toUpperCase());
-        newCost.setCreatedBy(principal.getUsername());
+        if(principal != null && principal.getUsername() != null){
+            newCost.setCreatedBy(principal.getUsername());
+        }
         clearingCostRepo.save(newCost);
         LOGGER.warn("Clearing cost saved");
         return entityToDtoMapping(newCost);
@@ -61,7 +63,9 @@ public class ClearingCostServiceImpl implements ClearingCostService {
         );
         cost.setClearingCost(clearingCostDto.getClearingCost());
         cost.setCardIssuingCountry(clearingCostDto.getCardIssuingCountry().toUpperCase());
-        cost.setModifiedBy(principal.getUsername());
+        if(principal != null && principal.getUsername() != null){
+            cost.setModifiedBy(principal.getUsername());
+        }
         clearingCostRepo.save(cost);
         LOGGER.warn("Clearing cost updated");
         return entityToDtoMapping(cost);
