@@ -3,21 +3,20 @@
 
 ## Overview
 
-The **Card Cost API** is designed to calculate and manage clearing costs for payment cards based on card-issuing countries. Developed as part of the Etraveli Group hiring process, this API is built in Java with production-grade standards, offering full CRUD operations, caching, role-based access, and more. The API is ready for both development and production environments, with Docker support and MySQL integration.
+The **Card Cost API** is designed to calculate and manage clearing costs for payment cards based on card-issuing countries. 
+This API is built in Java with production-grade standards, offering full CRUD operations, caching, role-based access, and more. 
+The API is ready for both development and production environments, with Docker support and MySQL integration.
 
 ## Features
 
 - **CRUD Operations**: Full Create, Read, Update, and Delete operations on clearing costs.
-- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://www.handyapi.com/bin-list) to retrieve necessary card information. Caching is implemented to handle API limitations effectively.
+- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://www.handyapi.com/bin-list) to retrieve necessary card information.
+Caching is implemented to handle API limitations effectively.
 - **Authentication & Authorization**: Secure access through JWT-based authentication, with role-based authorization for protected endpoints.
 - **Database & Auditing**: MySQL database with initial data setup via Liquibase and auditing using Hibernate Envers.
 - **High Availability**: Configured to handle up to 7000 requests per minute with optimized server settings.
 - **Docker Support**: Dockerized application with separate configurations for development and production environments.
 - **Custom Exception Handling**: A global exception handler is implemented to manage common exceptions throughout the project, ensuring consistent and informative error responses.
-
-### External API
-
-- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://data.handyapi.com/bin) to retrieve necessary card information. Caching is implemented to handle API limitations effectively.
 
 ## Endpoints
 
@@ -119,9 +118,13 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 
 ### External API Changes
 
-During development, the application was initially integrated with the [Binlist API](https://binlist.net/) as the external data source for card information. However, midway through development, the Binlist API began returning 403 Forbidden errors due to Cloudflare marking it as a potential phishing site. This issue forced a switch to an alternative API: https://data.handyapi.com/bin.
+During development, the application was initially integrated with the [Binlist API](https://binlist.net/) as the external data source for card information. 
+However, midway through development, the Binlist API began returning 403 Forbidden errors due to Cloudflare marking it as a potential phishing site. 
+This issue forced a switch to an alternative API: https://data.handyapi.com/bin.
 
-While this required some adjustments, the core functionality remains the same. All calls to the **Card Cost API** continue to use the original DTO structure and endpoint setup, ensuring compatibility with the initial specifications. Users should be aware that, although the interface remains consistent, requests are now routed to the HandyAPI endpoint instead.
+While this required some adjustments, the core functionality remains the same. 
+All calls to the **Card Cost API** continue to use the original DTO structure and endpoint setup, ensuring compatibility with the initial specifications. 
+Users should be aware that, although the interface remains consistent, requests are now routed to the HandyAPI endpoint instead.
 
 
 ## Installation and Setup
