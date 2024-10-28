@@ -1,5 +1,6 @@
 package com.interview.etravli.dto.feign;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -7,12 +8,18 @@ import java.io.Serializable;
 @Data
 public class BinListFeignDTO implements Serializable {
 
-    private String Status;
-    private String Scheme;
-    private String Type;
-    private String Issuer;
-    private String CardTier;
-    private boolean prepaid;
+    @JsonProperty("Status")
+    private String status;
+    @JsonProperty("Scheme")
+    private String scheme;
+    @JsonProperty("Type")
+    private String type;
+    @JsonProperty("Issuer")
+    private String issuer;
+    @JsonProperty("CardTier")
+    private String cardTier;
+    @JsonProperty("Country")
     private CountryFeignDTO country;
-    private String Luhn;
+    @JsonProperty("Luhn")
+    private boolean luhn;
 }
