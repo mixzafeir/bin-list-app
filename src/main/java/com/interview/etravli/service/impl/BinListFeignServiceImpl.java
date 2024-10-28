@@ -25,7 +25,11 @@ public class BinListFeignServiceImpl implements BinListFeignService {
     @Cacheable(value = "cardNumberCache", key = "#cardNumber", unless = "#result == null")
     public BinListFeignDTO getCardInfoFromFeign(String cardNumber) {
         LOGGER.info("Fetching BIN LIST for card number from feign: {}", cardNumber);
-        return binListFeignClient.getCardInfoBinList(cardNumber, "3");
+        return binListFeignClient.getCardInfoBinList(
+                cardNumber,
+                "PostmanRuntime/7.29.2",   // User-Agent header
+                "*/*"                      // Accept header
+        );
     }
 
 }

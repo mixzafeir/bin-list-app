@@ -48,4 +48,5 @@ tasks.named('test') {
 }
 
 bootRun {
+	systemProperty "spring.profiles.active", "prod"
 }

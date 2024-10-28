@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface BinListFeignClient {
 
     @GetMapping("/{card-number}")
-    BinListFeignDTO getCardInfoBinList(@PathVariable("card-number") String cardNumber, @RequestHeader("Accept-Version") String acceptVersion);
+    BinListFeignDTO getCardInfoBinList(
+            @PathVariable("card-number") String cardNumber,
+            @RequestHeader("User-Agent") String userAgent,
+            @RequestHeader("Accept") String accept
+    );
 
 }

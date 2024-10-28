@@ -98,7 +98,7 @@ public class ClearingCostServiceImpl implements ClearingCostService {
     public ClearingCostResponseDTO getByCardNumber(String cardNumber){
         BinListFeignDTO feignResult = binListFeignService.getCardInfoFromFeign(cardNumber.substring(0,6));
         LOGGER.info("Fetching clearing cost by country code: {}", feignResult.getCountry());
-        ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getAlpha2()).orElseGet(
+        ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getA2()).orElseGet(
                 () -> clearingCostRepo.findByCardIssuingCountry("OT")
                         .orElseThrow(RuntimeException::new));
         ClearingCostResponseDTO dto = new ClearingCostResponseDTO();
