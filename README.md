@@ -5,10 +5,6 @@
 
 The **Card Cost API** is designed to calculate and manage clearing costs for payment cards based on card-issuing countries. Developed as part of the Etraveli Group hiring process, this API is built in Java with production-grade standards, offering full CRUD operations, caching, role-based access, and more. The API is ready for both development and production environments, with Docker support and MySQL integration.
 
-### External API Changes
-
-- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://data.handyapi.com/bin) to retrieve necessary card information. Caching is implemented to handle API limitations effectively.
-
 ## Features
 
 - **CRUD Operations**: Full Create, Read, Update, and Delete operations on clearing costs.
@@ -19,19 +15,25 @@ The **Card Cost API** is designed to calculate and manage clearing costs for pay
 - **Docker Support**: Dockerized application with separate configurations for development and production environments.
 - **Custom Exception Handling**: A global exception handler is implemented to manage common exceptions throughout the project, ensuring consistent and informative error responses.
 
+### External API
+
+- **Clearing Cost Calculation**: Determines the clearing cost based on the card-issuing country, utilizing an external API (https://data.handyapi.com/bin) to retrieve necessary card information. Caching is implemented to handle API limitations effectively.
+
 ## Endpoints
 
-### Authentication
-- **Login**
-  - **Path**: `/auth/login`
-  - **Method**: `POST`
-  - **Request Body**:
-    ```json
-    {
-      "username": "string (not blank)",
-      "password": "string (not blank)"
-    }
-    ```
+## Authentication
+
+### Login
+- **Path**: `/auth/login`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "username": "demo",
+    "password": "test"
+  }
+  ```
+  **Note**: The database is initialized with these default credentials. Ensure that the login request uses this `username` and `password` combination to authenticate successfully.
   - **Response**:
     ```json
     {
