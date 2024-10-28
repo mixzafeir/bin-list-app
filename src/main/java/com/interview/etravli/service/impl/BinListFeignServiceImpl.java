@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @Service
 public class BinListFeignServiceImpl implements BinListFeignService {
@@ -21,10 +22,10 @@ public class BinListFeignServiceImpl implements BinListFeignService {
 
     private final BinListFeignClient binListFeignClient;
 
-    private TaskExecutor taskExecutor;
+    private final Executor taskExecutor;
 
     @Autowired
-    public BinListFeignServiceImpl(BinListFeignClient binListFeignClient, TaskExecutor taskExecutor){
+    public BinListFeignServiceImpl(BinListFeignClient binListFeignClient, Executor taskExecutor){
         this.binListFeignClient = binListFeignClient;
         this.taskExecutor = taskExecutor;
     }
