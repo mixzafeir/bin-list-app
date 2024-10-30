@@ -14,6 +14,8 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -96,12 +98,15 @@ public class ClearingCostServiceImpl implements ClearingCostService {
     @Override
     @Transactional
     public CompletableFuture<ClearingCostResponseDTO> getByCardNumber(String cardNumber){
+        SecurityContext sc = SecurityContextHolder.getContext();
         return binListFeignService.getCardInfoFromFeign(cardNumber.substring(0, 6))
                 .thenApplyAsync(feignResult -> {
+                    SecurityContextHolder.setContext(sc);
                     LOGGER.info("Fetching clearing cost by country code: {}", feignResult.getCountry());
                     ClearingCost result = clearingCostRepo.findByCardIssuingCountry(feignResult.getCountry().getA2())
                             .orElseGet(() -> clearingCostRepo.findByCardIssuingCountry("OT")
                                     .orElseThrow(RuntimeException::new));
+                    LOGGER.info(SecurityContextHolder.getContext().toString());
                     return entityToResponseDtoMapping(result);
                 });
     }

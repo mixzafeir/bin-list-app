@@ -10,6 +10,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.stream.Task;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
@@ -35,8 +37,14 @@ public class BinListFeignServiceImpl implements BinListFeignService {
     @Cacheable(value = "cardNumberCache", key = "#cardNumber", unless = "#result == null")
     public CompletableFuture<BinListFeignDTO> getCardInfoFromFeign(String cardNumber) {
         LOGGER.info("Fetching BIN LIST for card number from feign: {}", cardNumber);
-        return CompletableFuture.
-                supplyAsync(() -> binListFeignClient.getCardInfoBinList(cardNumber, "3"), taskExecutor);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        return CompletableFuture.supplyAsync(() -> {
+            try{
+                return binListFeignClient.getCardInfoBinList(cardNumber);
+            } finally {
+                SecurityContextHolder.setContext(sc);
+            }
+        }, taskExecutor);
     }
 
 }

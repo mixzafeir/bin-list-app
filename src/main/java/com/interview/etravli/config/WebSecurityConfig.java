@@ -46,14 +46,4 @@ public class WebSecurityConfig implements AsyncConfigurer {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public Executor taskExecutor() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(15);
-        taskExecutor.setMaxPoolSize(50);
-        taskExecutor.setQueueCapacity(100);
-        taskExecutor.initialize();
-        return new DelegatingSecurityContextAsyncTaskExecutor(taskExecutor);
-    }
-
 }
