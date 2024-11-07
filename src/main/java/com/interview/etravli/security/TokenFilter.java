@@ -51,6 +51,8 @@ public class TokenFilter extends OncePerRequestFilter {
             LOGGER.error("Cannot set Authorization: {}", e.getMessage());
             throw new AuthorizationException(ExceptionMessages.AUTHORIZATION_FAILED);
         }
+        LOGGER.error("TOKENFILTER CLASS");
+        LOGGER.error(SecurityContextHolder.getContext().toString());
         filterChain.doFilter(request, response);
     }
 

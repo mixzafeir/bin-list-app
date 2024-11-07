@@ -9,11 +9,14 @@ import com.interview.etravli.service.ClearingCostService;
 import com.interview.etravli.service.impl.ClearingCostServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,14 +76,20 @@ public class ClearingCostController {
     }
 
     @PostMapping("/payment-cards-cost")
+    @Async
     public CompletableFuture<ResponseEntity<ClearingCostResponseDTO>> getClearingCostById(@Valid @RequestBody CardNumberDTO dto) {
         SecurityContext sc = SecurityContextHolder.getContext();
-        return clearingCostService.getByCardNumber(dto.getCard_number())
-                .thenApply(response -> {
-                    SecurityContextHolder.setContext(sc);
-                    LOGGER.info(SecurityContextHolder.getContext().toString());
-                    return ResponseEntity.ok(response);
-                });
+        return CompletableFuture.supplyAsync(() -> {
+                SecurityContextHolder.setContext(sc);
+                return clearingCostService.getByCardNumber(dto.getCard_number()).join();
+            }).thenApply(response -> {
+                LOGGER.info(SecurityContextHolder.getContext().toString());
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                return ResponseEntity.ok(response);
+            }).exceptionally(ex -> {
+                LOGGER.error("Error in async processing: ", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            });
     }
 
 //    @PostMapping("/payment-cards-cost")

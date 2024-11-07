@@ -20,28 +20,28 @@ import java.util.Map;
 @EnableCaching
 public class CacheConfig {
 
-    @Value("${SPRING_REDIS_HOST}")
+    @Value("${SPRING_REDIS_HOST:localhost}")
     private String redisHost;
 
-    @Value("${SPRING_REDIS_PORT}")
+    @Value("${SPRING_REDIS_PORT:6379}")
     private int redisPort;
 
-    @Value("${SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE}")
+    @Value("${SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE:10}")
     private int maxActive;
 
-    @Value("${SPRING_REDIS_LETTUCE_POOL_MAX_IDLE}")
+    @Value("${SPRING_REDIS_LETTUCE_POOL_MAX_IDLE:5}")
     private int maxIdle;
 
-    @Value("${SPRING_REDIS_LETTUCE_POOL_MIN_IDLE}")
+    @Value("${SPRING_REDIS_LETTUCE_POOL_MIN_IDLE:1}")
     private int minIdle;
 
-    @Value("${SPRING_REDIS_LETTUCE_POOL_MAX_WAIT}")
+    @Value("${SPRING_REDIS_LETTUCE_POOL_MAX_WAIT:1000}")
     private long maxWaitMillis;
 
-    @Value("${SPRING_REDIS_TIMEOUT}")
+    @Value("${SPRING_REDIS_TIMEOUT:2000}")
     private long timeoutMillis;
 
-    @Value("${SPRING_REDIS_LETTUCE_SHUTDOWN_TIMEOUT}")
+    @Value("${SPRING_REDIS_LETTUCE_SHUTDOWN_TIMEOUT:50}")
     private long shutdownTimeoutMillis;
 
     @Bean

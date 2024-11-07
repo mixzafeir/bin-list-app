@@ -13,7 +13,6 @@ import java.util.concurrent.Executor;
 
 @SpringBootApplication
 @EnableCaching
-@EnableAsync
 @EnableFeignClients
 public class EtravliApplication {
 
@@ -21,14 +20,5 @@ public class EtravliApplication {
 		SpringApplication.run(EtravliApplication.class, args);
 	}
 
-	@Bean
-	public Executor taskExecutor() {
-		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-		taskExecutor.setCorePoolSize(15);
-		taskExecutor.setMaxPoolSize(50);
-		taskExecutor.setQueueCapacity(100);
-		taskExecutor.initialize();
-		return new DelegatingSecurityContextAsyncTaskExecutor(taskExecutor);
-	}
 
 }
